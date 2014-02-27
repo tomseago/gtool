@@ -14,13 +14,14 @@ public:
     Word(const QChar& c);
     Word(const char c, const int intVal = INT_MAX, const double doubleVal= DBL_MAX);
     Word(const Word* other);
+    ~Word();
 
     // TODO: make these private...
     QChar _char;
     double _double;
     int _int;
 
-    QMap<QChar, Word*> parameters;
+    QMap<QChar, Word*> _parameters;
 
     void setValue(QString& value);
 
@@ -29,11 +30,18 @@ public:
     bool acceptsParameter(const Word* other) const;
     bool canBeImplied() const;
 
-    void addParameter(Word* other);
+    void addParameter(const Word* other);
+    void addParameter(const Word& other);
+    void removeParameter(const QChar& c);
 
-    QString toString();
-    QString toCommandString();
-    QString getCommandError();
+    double doubleValue() const;
+    int intValue() const;
+    bool parameterAsDouble(const QChar& c, double* value) const;
+    bool parameterAsInt(const QChar& c, int* value) const;
+
+    QString toString() const;
+    QString toCommandString() const;
+    QString getCommandError() const;
 
     bool operator==(const Word& other) const;
     bool operator!=(const Word& other) const;

@@ -1,7 +1,7 @@
 #include "codeblock.h"
 
 #include <QStringList>
-
+#include <QHash>
 
 CodeBlock::CodeBlock(QString& line, int lineNum, const CodeBlock* previous) :
     _fileLineNum(lineNum),
@@ -19,6 +19,64 @@ CodeBlock::CodeBlock(QString& line, int lineNum, const CodeBlock* previous) :
     _nextParser(NULL)
 {
     parse();
+}
+
+CodeBlock::CodeBlock(const CodeBlock* other) :
+    _fileLineNum(other->_fileLineNum),
+    _original(other->_original),
+    _blockDelete(other->_blockDelete),
+    _percent(other->_percent),
+    _writtenLineNumber(other->_writtenLineNumber),
+    _comment(NULL),
+    _impliedCommand(NULL),
+    _previous(NULL), // Will not copy previous or other reasonable parsing state
+    _cursor(0),
+    _ignoreNumbers(false),
+    _currentWord(NULL),
+    _commentParser(NULL),
+    _nextParser(NULL)
+{
+    if (other->_comment) _comment = new QString(*(other->_comment));
+
+    // Should deep copy error list....
+
+    // MUST deep copy the words
+    QHash<Word*, Word*> map;
+
+    for(int i = 0; i< other->_words.size(); i++)
+    {
+        Word* old = other->_words.at(i);
+        Word* neu = new Word(old);
+
+        map[old] = neu;
+
+        _words.append(neu);
+    }
+
+    for(int i = 0; i< other->_commands.size(); i++)
+    {
+        Word* neu = map.value(other->_commands.at(i));
+        if (neu) _commands.append(neu);
+    }
+
+    for(int i = 0; i< other->_parameters.size(); i++)
+    {
+        Word* neu = map.value(other->_parameters.at(i));
+        if (neu) _parameters.append(neu);
+    }
+
+    QMap<Word*, char>::const_iterator it = other->_orderedCommands.constBegin();
+    for(; it != other->_orderedCommands.constEnd(); it++)
+    {
+        Word* old = it.key();
+        Word* neu = map.value(old);
+        if (!neu) continue;
+
+        _orderedCommands[neu] = it.value();
+    }
+
+    if (other->_impliedCommand) _impliedCommand = new Word(other->_impliedCommand);
+
 }
 
 CodeBlock::~CodeBlock()
@@ -61,9 +119,22 @@ CodeBlock::hasError() const
     return _errorList.size() > 0;
 }
 
-const QList<ParseError *> &CodeBlock::errors() const
+const QList<ParseError *> &
+CodeBlock::errors() const
 {
     return _errorList;
+}
+
+QMap<Word*, char>::const_iterator
+CodeBlock::commandsBegin() const
+{
+    return _orderedCommands.constBegin();
+}
+
+QMap<Word*, char>::const_iterator
+CodeBlock::commandsEnd() const
+{
+    return _orderedCommands.constEnd();
 }
 
 ////////////////////////////////////////////////////////////////

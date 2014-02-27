@@ -56,6 +56,10 @@ Word::Word(const Word* other) :
     // Nothing else....
 }
 
+Word::~Word()
+{
+    _parameters.keys();
+}
 
 
 bool
@@ -231,14 +235,75 @@ Word::canBeImplied() const
 }
 
 void
-Word::addParameter(Word* other)
+Word::addParameter(const Word* other)
 {
     if (!other) return;
-    parameters[other->_char] = other;
+    _parameters[other->_char] = new Word(other);
 }
 
+void
+Word::addParameter(const Word& other)
+{
+    addParameter(&other);
+}
+
+void
+Word::removeParameter(const QChar& c)
+{
+    if (_parameters.contains(c))
+    {
+        Word* w = _parameters.value(c);
+        _parameters.remove(c);
+        delete w;
+    }
+}
+
+
+double
+Word::doubleValue() const
+{
+    if (_wantsInt) return (double)_int;
+    return _double;
+}
+
+int
+Word::intValue() const
+{
+    if (_wantsInt) return _int;
+    return (int)_double;
+}
+
+bool
+Word::parameterAsDouble(const QChar& c, double* value) const
+{
+    Word* p = _parameters.value(c);
+    if (!p) return false;
+
+    if (value)
+    {
+        *value = p->doubleValue();
+    }
+    return true;
+}
+
+bool
+Word::parameterAsInt(const QChar& c, int* value) const
+{
+    Word* p = _parameters.value(c);
+    if (!p) return false;
+
+    if (value)
+    {
+        *value = p->intValue();
+    }
+    return true;
+}
+
+
+
+
 QString
-Word::toString()
+Word::toString() const
 {
     if (_wantsInt) return QString("%1%2").arg(_char).arg(_int);
 
@@ -246,13 +311,13 @@ Word::toString()
 }
 
 QString
-Word::toCommandString()
+Word::toCommandString() const
 {
     QStringList output;
     output.append(toString());
 
     QMap<QChar, Word*>::const_iterator it;
-    for(it = parameters.constBegin(); it != parameters.constEnd(); ++it)
+    for(it = _parameters.constBegin(); it != _parameters.constEnd(); ++it)
     {
         output.append(it.value()->toString());
     }
@@ -262,7 +327,7 @@ Word::toCommandString()
 
 
 QString
-Word::getCommandError()
+Word::getCommandError() const
 {
     return QString();
 }

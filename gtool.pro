@@ -24,7 +24,10 @@ SOURCES += main.cpp\
     word.cpp \
     ui_errorslistmodel.cpp \
     parseerror.cpp \
-    parametermapper.cpp
+    parametermapper.cpp \
+    progoptimizer.cpp \
+    virtualmachine.cpp \
+    vmstate.cpp
 
 HEADERS  += mainwindow.h \
     job.h \
@@ -37,7 +40,10 @@ HEADERS  += mainwindow.h \
     word.h \
     ui_errorslistmodel.h \
     parseerror.h \
-    parametermapper.h
+    parametermapper.h \
+    progoptimizer.h \
+    virtualmachine.h \
+    vmstate.h
 
 FORMS    += mainwindow.ui
 

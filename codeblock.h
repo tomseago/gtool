@@ -14,6 +14,7 @@ class CodeBlock
 public:
     //CodeBlock();
     CodeBlock(QString& line, int lineNum = -1, const CodeBlock* previous = NULL);
+    CodeBlock(const CodeBlock*);
     ~CodeBlock();
 
     const QString& original();
@@ -25,6 +26,8 @@ public:
     // We'll want to pass some arguments into here in the future.
     void updateFormatted();
 
+    QMap<Word*, char>::const_iterator commandsBegin() const;
+    QMap<Word*, char>::const_iterator commandsEnd() const;
 
 protected:
     typedef void (CodeBlock::*ParseFunction)();

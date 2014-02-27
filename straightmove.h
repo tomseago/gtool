@@ -6,7 +6,9 @@
 class StraightMove : public Move
 {
 public:
-    StraightMove(Position from, Position to, double speed);
+    StraightMove(Position from, Position to, double time);
+
+    virtual Word* getCommand(double feed=DBL_MAX, bool asAbsolute=true);
 };
 
 #endif // STRAIGHTMOVE_H

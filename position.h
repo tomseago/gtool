@@ -11,6 +11,8 @@ public:
 
     double distanceFrom(Position& other);
 
+    Position operator+(const Position& other) const;
+    Position& operator+=(const Position& other);
 };
 
 #endif // POSITION_H

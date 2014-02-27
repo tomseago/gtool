@@ -24,3 +24,17 @@ Position::distanceFrom(Position& other)
 
     return sqrt(dX*dX + dY*dY + dZ*dZ);
 }
+
+Position
+Position::operator+(const Position& other) const
+{
+    Position out(_x + other._x, _y + other._y, _z + other._z);
+    return out;
+}
+
+Position&
+Position::operator+=(const Position& other)
+{
+    *this = *this + other;
+    return *this;
+}
