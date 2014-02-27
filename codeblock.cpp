@@ -1,5 +1,6 @@
 #include "codeblock.h"
 
+#include <QStringList>
 
 
 CodeBlock::CodeBlock(QString& line, int lineNum, const CodeBlock* previous) :
