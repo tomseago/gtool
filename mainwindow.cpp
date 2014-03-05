@@ -17,7 +17,8 @@
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     _ui(new Ui::MainWindow),
-    _file(NULL)
+    _file(NULL),
+    _machineWindow()
 {
     commonConstruction();
 }
@@ -25,7 +26,8 @@ MainWindow::MainWindow(QWidget *parent) :
 MainWindow::MainWindow(QFile* file) :
     QMainWindow(0),
     _ui(new Ui::MainWindow),
-    _file(file)
+    _file(file),
+    _machineWindow()
 {
     commonConstruction();
 
@@ -39,17 +41,25 @@ MainWindow::~MainWindow()
 
     if (_file) delete _file;
     _file = NULL;
+
 }
 
 void
 MainWindow::commonConstruction()
 {
+    connect(&_machineWindow, SIGNAL(readyForData()), this, SLOT(machineWindowReady()));
+
     _ui->setupUi(this);
 
     _ui->actionOpen_gcode->setIcon(this->style()->standardIcon(QStyle::SP_DialogOpenButton));
 
     _ui->originalTextEdit->setDocument(&_doc);
-    _ui->reformattedTextEdit->setDocument(&_reformattedDoc);
+    //_ui->reformattedTextEdit->setDocument(&_reformattedDoc);
+
+    QWidget* widg = QWidget::createWindowContainer(&_machineWindow, this);
+    widg->setMinimumSize(100, 100);
+    widg->setMouseTracking(true);
+    _ui->topSplitter->addWidget(widg);
 
     // Seutp our formats
     _errorFormat.setForeground(QBrush(QColor("red")));
@@ -204,4 +214,12 @@ MainWindow::updateFromCodeBlocks(const QList<CodeBlock*>& blocks)
     _ui->errorsView->setSelectionMode(QAbstractItemView::SingleSelection);
     QItemSelectionModel* selectionModel = _ui->errorsView->selectionModel();
     connect(selectionModel, SIGNAL(selectionChanged(QItemSelection,QItemSelection)), this, SLOT(errorSelectionChanged(QItemSelection,QItemSelection)));
+}
+
+
+void
+MainWindow::machineWindowReady()
+{
+    QList<Word*> foo;
+    _machineWindow.setProgram(foo);
 }

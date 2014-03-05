@@ -1,10 +1,10 @@
-#include "progoptimizer.h"
+#include "optimizer.h"
 
 #include "codeblock.h"
 #include "virtualmachine.h"
 #include "move.h"
 
-ProgOptimizer::ProgOptimizer(QList<CodeBlock*> original) :
+Optimizer::Optimizer(QList<CodeBlock*> original) :
     _hasDiagonals(false),
     _numLayers(0)
 {
@@ -43,7 +43,7 @@ ProgOptimizer::ProgOptimizer(QList<CodeBlock*> original) :
     }
 }
 
-ProgOptimizer::~ProgOptimizer()
+Optimizer::~Optimizer()
 {
     QList< QList<Move*>* > all = _layers.values();
 
@@ -60,7 +60,7 @@ ProgOptimizer::~ProgOptimizer()
 }
 
 const QList<double>
-ProgOptimizer::layerZs() const
+Optimizer::layerZs() const
 {
     QList<double> list;
 
@@ -73,7 +73,7 @@ ProgOptimizer::layerZs() const
 // i.e. one is lines and another is drills, we will do them in order from high
 // to low, each time returning to safeLevel between lines.
 QList<Word*>
-ProgOptimizer::optimize(double limit, double safeLevel, double plungeRate, double retractRate, double drawRate)
+Optimizer::optimize(double limit, double safeLevel, double plungeRate, double retractRate, double drawRate)
 {
     QList<Word*> out;
     Word* cmd;
@@ -156,7 +156,7 @@ ProgOptimizer::optimize(double limit, double safeLevel, double plungeRate, doubl
 }
 
 Move*
-ProgOptimizer::popClosestMove(QList<Move*>& layer, Position& loc)
+Optimizer::popClosestMove(QList<Move*>& layer, Position& loc)
 {
     double minDistance = DBL_MAX;
     Move* move = NULL;

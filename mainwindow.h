@@ -9,6 +9,7 @@
 #include <QItemSelection>
 
 #include "codeblock.h"
+#include "machinewindow.h"
 
 namespace Ui {
 class MainWindow;
@@ -31,6 +32,8 @@ private slots:
 
     void on_actionQuit_triggered();
 
+    void machineWindowReady();
+
 
 private:
     Ui::MainWindow *_ui;
@@ -41,6 +44,8 @@ private:
     QTextCharFormat _errorFormat;
     QTextCharFormat _errorHighlightFormat;
     QTextCharFormat _normalFormat;
+
+    MachineWindow _machineWindow;
 
     void commonConstruction();
 

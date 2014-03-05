@@ -11,11 +11,11 @@ class CodeBlock;
 class VirtualMachine;
 class Move;
 
-class ProgOptimizer
+class Optimizer
 {
 public:
-    ProgOptimizer(QList<CodeBlock*> original);
-    ~ProgOptimizer();
+    Optimizer(QList<CodeBlock*> original);
+    ~Optimizer();
 
     bool _hasDiagonals;
     int _numLayers;

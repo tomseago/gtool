@@ -25,9 +25,10 @@ SOURCES += main.cpp\
     ui_errorslistmodel.cpp \
     parseerror.cpp \
     parametermapper.cpp \
-    progoptimizer.cpp \
     virtualmachine.cpp \
-    vmstate.cpp
+    vmstate.cpp \
+    optimizer.cpp \
+    machinewindow.cpp
 
 HEADERS  += mainwindow.h \
     job.h \
@@ -41,11 +42,19 @@ HEADERS  += mainwindow.h \
     ui_errorslistmodel.h \
     parseerror.h \
     parametermapper.h \
-    progoptimizer.h \
     virtualmachine.h \
-    vmstate.h
+    vmstate.h \
+    optimizer.h \
+    machinewindow.h
 
 FORMS    += mainwindow.ui
 
 # Mac stuff
 ICON = app_icon.icns
+
+OTHER_FILES += \
+    default.vert \
+    default.frag
+
+RESOURCES += \
+    resources.qrc
